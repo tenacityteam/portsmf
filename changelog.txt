@@ -1,5 +1,10 @@
 Change Log for portsmf
 
+16-Jul-2021 Be  Import to Git.
+                Add CMake build system.
+                Reorganize files.
+                Remove legacy files.
+
 09-Oct-2010 RBD Many more changes to fix bugs, support Audacity, and general
                 cleanup.
 
