@@ -71,3 +71,8 @@ install(
     "${CMAKE_CURRENT_BINARY_DIR}/packaging/PortSMFConfigVersion.cmake"
   DESTINATION "${PORTSMF_INSTALL_CMAKEDIR}"
 )
+
+option(BUILD_TESTING "Include test projects" OFF)
+if(BUILD_TESTING)
+  add_subdirectory(test)
+endif()
