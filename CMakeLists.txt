@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(PortSMF VERSION 235.0 LANGUAGES CXX)
+project(PortSMF VERSION 235.1 LANGUAGES CXX)
 
 option(BUILD_SHARED_LIBS "Build dynamic library" ON)
 
