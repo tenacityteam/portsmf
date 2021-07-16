@@ -5,14 +5,14 @@ project(PortSMF VERSION 235.0 LANGUAGES CXX)
 option(BUILD_SHARED_LIBS "Build dynamic library" ON)
 
 add_library(PortSMF
-  allegro.cpp
-  allegrord.cpp
-  allegroserial.cpp
-  allegrosmfrd.cpp
-  allegrosmfwr.cpp
-  allegrowr.cpp
-  mfmidi.cpp
-  strparse.cpp
+  src/allegro.cpp
+  src/allegrord.cpp
+  src/allegroserial.cpp
+  src/allegrosmfrd.cpp
+  src/allegrosmfwr.cpp
+  src/allegrowr.cpp
+  src/mfmidi.cpp
+  src/strparse.cpp
 )
 target_include_directories(PortSMF PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
