@@ -1,11 +1,16 @@
-portsmf README.txt
-14 Jun 2008
-Roger B. Dannenberg
-
 Portsmf is "Port Standard MIDI File", a cross-platform, C++ library
 for reading and writing Standard MIDI Files.
 
-License information: free and open source, see license.txt for details
+License information:
+free and open source, see license.txt for details
+
+Building:
+PortSMF has no dependencies and uses the CMake build system.
+To build it, run:
+
+$ cmake -DCMAKE_INSTALL_PREFIX=/where/you/want/to/install/to -S . -B build
+$ cmake --build build --parallel number-of-cpu-cores
+$ cmake --install build
 
 Features:
 
@@ -19,14 +24,3 @@ Features:
 - input and output of a text-based representation: Allegro files
 - extensive editing operations on sequences and tracks
 - conversion to/from binary buffers for archiving, undo/redo, etc.
-
-Portsmf is a relatively small number of about 9 files, so there is
-currently no support for building/maintaining Portsmf as a separate
-library. (Contributions are welcome.) For now, it is suggested that
-you simply compile these files along with your application sources.
-
-There is a test program in portsmf_test and makefiles to build it as
-an example.
-
-You might want to browse through portsmf_test/allegro_test.cpp 
-for examples that use and exercise most of the portsmf functions.
