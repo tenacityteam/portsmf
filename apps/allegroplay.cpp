@@ -3,6 +3,7 @@
 //#include "stdio.h"
 //#include "memory.h"
 //#include "assert.h"
+#include <cstring>
 #include <fstream>
 #include "allegro.h"
 #include "mfmidi.h"

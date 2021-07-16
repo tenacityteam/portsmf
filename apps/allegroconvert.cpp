@@ -5,6 +5,7 @@
              the original beats or original timing (RBD)
 */
 
+#include <cstring>
 #include <fstream>
 #include "allegro.h"
 

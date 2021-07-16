@@ -1,6 +1,7 @@
 // seq2midi.cpp -- simple sequence player, intended to help test/demo
 // the allegro code
 
+#include <cstring>
 #include <fstream>
 #include "allegro.h"
 #include "porttime.h"
