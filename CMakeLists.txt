@@ -44,9 +44,9 @@ install(FILES
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/portSMF")
 
 # pkgconfig
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/portSMF.pc.in
-  ${CMAKE_CURRENT_BINARY_DIR}/portSMF.pc @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/portSMF.pc DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/packaging/portSMF.pc.in
+  ${CMAKE_CURRENT_BINARY_DIR}/packaging/portSMF.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/packaging/portSMF.pc DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 # CMake config
 set(PORTSMF_INSTALL_CMAKEDIR "lib/cmake/PortSMF")
@@ -56,18 +56,18 @@ install(
   NAMESPACE PortSMF::
   DESTINATION "${PORTSMF_INSTALL_CMAKEDIR}"
 )
-configure_package_config_file(PortSMFConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/PortSMFConfig.cmake"
+configure_package_config_file(packaging/PortSMFConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/packaging/PortSMFConfig.cmake"
   INSTALL_DESTINATION "${PORTSMF_INSTALL_CMAKEDIR}"
 )
 write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/PortSMFConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/packaging/PortSMFConfigVersion.cmake"
   VERSION "${CMAKE_PROJECT_VERSION}"
   COMPATIBILITY SameMajorVersion
 )
 install(
   FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/PortSMFConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/PortSMFConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/packaging/PortSMFConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/packaging/PortSMFConfigVersion.cmake"
   DESTINATION "${PORTSMF_INSTALL_CMAKEDIR}"
 )
