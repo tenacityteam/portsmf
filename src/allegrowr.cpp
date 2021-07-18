@@ -21,7 +21,7 @@
 /* #define TIMFMT "%.4d" */
 #define TIMPREC 4
 #define TIMFMT std::fixed << std::setprecision(TIMPREC)
-#define GFMT resetiosflags(std::ios::floatfield) << std::setprecision(6)
+#define GFMT std::resetiosflags(std::ios::floatfield) << std::setprecision(6)
 
 void parameter_print(std::ostream &file, Alg_parameter_ptr p)
 {
