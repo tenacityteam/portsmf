@@ -166,7 +166,7 @@ void test7()
 {
     Alg_seq_ptr seq = make_score();
     seq->write(cout, false);
-    // insert time signature for one bar each of 4/4, 3/4, 5/4, 4/4 and 
+    // insert time signature for one bar each of 4/4, 3/4, 5/4, 4/4 and
     // call quarter_to_measure() on various times
 	seq->convert_to_beats(); // make sure we're talking beats
 	seq->time_sig.insert(0, 4, 4);
@@ -236,10 +236,10 @@ void test9()
 }
 
 /*
-# show show 
+# show show
 #  TW0.25 -tempor:30
 #  TW0.5 -tempor:15
-# in the beat-based output, and beats at 0, 0.6, 2.6, 6.6 in the 
+# in the beat-based output, and beats at 0, 0.6, 2.6, 6.6 in the
 # time-based output
 */
 
@@ -315,7 +315,7 @@ void test13()
 
 /*
 # test13()
-# 
+#
 # tempo should be transformed to:
 #
 # TW0 -tempor:75
@@ -418,7 +418,7 @@ void test18() // test copy_interval_from_track
 }
 /*
 # test18()
-# 
+#
 # should see track 0 from beat 1 to 3, i.e.
 # K65 at T0, K67 at TW0.25
 */
@@ -675,9 +675,9 @@ void test30() // test find on a track
 {
     Alg_seq_ptr seq = make_score();
     seq->convert_to_beats();
-    Alg_event_list_ptr track = seq->track(0)->find(0, 2, false, 1 << 0, 
+    Alg_event_list_ptr track = seq->track(0)->find(0, 2, false, 1 << 0,
                            1 << ALG_NOTE);
-    seq->track_list.append(new Alg_track(*track, seq->get_time_map(), 
+    seq->track_list.append(new Alg_track(*track, seq->get_time_map(),
                      seq->get_units_are_seconds()));
     seq->write(cout, false);
 }
@@ -685,7 +685,7 @@ void test30() // test find on a track
 
 /*
 # test30()
-# 
+#
 # sets track 1 to TW0 K63, TW0.25 K65
 */
 
@@ -694,9 +694,9 @@ void test31() // test find_in_track
 {
     Alg_seq_ptr seq = make_score();
     seq->convert_to_beats();
-    Alg_event_list_ptr track = seq->find_in_track(0, 0, 2, false, 1 << 0, 
+    Alg_event_list_ptr track = seq->find_in_track(0, 0, 2, false, 1 << 0,
                           1 << ALG_NOTE);
-    seq->track_list.append(new Alg_track(*track, seq->get_time_map(), 
+    seq->track_list.append(new Alg_track(*track, seq->get_time_map(),
                      seq->get_units_are_seconds()));
     seq->write(cout, false);
 }
@@ -710,7 +710,7 @@ void test32() // serialize big midi file and unserialize
     }
     Alg_seq_ptr seq = new Alg_seq(file, true); // read midi file
     file.close();
-    
+
     ofstream ofile("bigseq1.alg", ios::out | ios::binary);
     printf("after reading, real_dur is %g, beat_dur is %g\n",
        seq->get_real_dur(), seq->get_beat_dur());
@@ -737,7 +737,7 @@ void test33() // cut and inspect some notes
     Alg_seq_ptr seq = new Alg_seq(file, true); // read midi file
     file.close();
     seq->convert_to_seconds();
-    
+
     Alg_time_map_ptr tm = seq->get_time_map();
     printf("time map %p before\n", tm);
     // tm->show();
