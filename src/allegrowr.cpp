@@ -1,29 +1,29 @@
 // allegrowr.cpp -- write sequence to an Allegro file (text)
 
-#include "assert.h"
-#include "stdlib.h"
+#include <cassert>
+//#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <errno.h>
+//#include <cerrno>
 #include <string>
 #include "memory.h"
-using namespace std;
+//using namespace std;
 #include "strparse.h"
 #include "allegro.h"
 
-// Note about precision: %g prints 6 significant digits. For 1ms precision, 
+// Note about precision: %g prints 6 significant digits. For 1ms precision,
 // the maximum magnitude is 999.999, i.e. 1000s < 17minutes. For anything
 // over 1000s, time in seconds will be printed with 10ms precision, which
-// is not good. Therefore, times and durations are printed as %.4d, which 
+// is not good. Therefore, times and durations are printed as %.4d, which
 // gives 100us precision.
 // The following define allows you to change this decision:
 /* #define TIMFMT "%.4d" */
 #define TIMPREC 4
-#define TIMFMT fixed << setprecision(TIMPREC)
-#define GFMT resetiosflags(ios::floatfield) << setprecision(6)
+#define TIMFMT std::fixed << std::setprecision(TIMPREC)
+#define GFMT resetiosflags(std::ios::floatfield) << std::setprecision(6)
 
-void parameter_print(ostream &file, Alg_parameter_ptr p)
+void parameter_print(std::ostream &file, Alg_parameter_ptr p)
 {
     file << " -" << p->attr_name() << ":";
     switch (p->attr_type()) {
@@ -40,7 +40,7 @@ void parameter_print(ostream &file, Alg_parameter_ptr p)
         file << p->r;
         break;
     case 's': {
-        string str;
+        std::string str;
         string_escape(str, p->s, "\"");
         file << str;
         break;
@@ -48,7 +48,7 @@ void parameter_print(ostream &file, Alg_parameter_ptr p)
     }
 }
 
-Alg_event_ptr Alg_seq::write_track_name(ostream &file, int n, 
+Alg_event_ptr Alg_seq::write_track_name(std::ostream &file, int n,
                                         Alg_events &events)
 // write #track <n> <trackname-or-sequencename>
 // if we write the name on the "#track" line, then we do *not* want
@@ -73,17 +73,17 @@ Alg_event_ptr Alg_seq::write_track_name(ostream &file, int n,
             }
         }
     }
-    file << endl; // end of line containing #track [<name>]
+    file << std::endl; // end of line containing #track [<name>]
     return e; // return parameter event with name if one was found
 }
 
 
-void Alg_seq::write(ostream &file, bool in_secs, double offset)
+void Alg_seq::write(std::ostream &file, bool in_secs, double offset)
 {
     int i, j;
     if (in_secs) convert_to_seconds();
     else convert_to_beats();
-    file << "#offset " << offset << endl;
+    file << "#offset " << offset << std::endl;
     Alg_event_ptr update_to_skip = write_track_name(file, 0, track_list[0]);
     Alg_beats &beats = time_map->beats;
     for (i = 0; i < beats.len - 1; i++) {
@@ -112,9 +112,9 @@ void Alg_seq::write(ostream &file, bool in_secs, double offset)
         Alg_time_sig &ts = time_sig[i];
         double time = ts.beat;
         if (in_secs) {
-            file << "T" << TIMFMT << time << " V- -timesig_numr:" << 
+            file << "T" << TIMFMT << time << " V- -timesig_numr:" <<
                     GFMT << ts.num << "\n";
-            file << "T" << TIMFMT << time << " V- -timesig_denr:" << 
+            file << "T" << TIMFMT << time << " V- -timesig_denr:" <<
                     GFMT << ts.den << "\n";
         } else {
             double wholes = ts.beat / 4;
@@ -147,14 +147,14 @@ void Alg_seq::write(ostream &file, bool in_secs, double offset)
             if (e->is_note()) {
                 Alg_note_ptr n = (Alg_note_ptr) e;
                 double dur = n->dur;
-                file << " K" << n->get_identifier() << 
+                file << " K" << n->get_identifier() <<
                         " P" << GFMT << n->pitch;
                 if (in_secs) {
                     file << " U" << TIMFMT << dur;
                 } else {
                     file << " Q" << TIMFMT << dur;
                 }
-                file << " L" << GFMT << n->loud; 
+                file << " L" << GFMT << n->loud;
                 Alg_parameters_ptr p = n->parameters;
                 while (p) {
                     parameter_print(file, &(p->parm));
@@ -175,7 +175,7 @@ void Alg_seq::write(ostream &file, bool in_secs, double offset)
 
 bool Alg_seq::write(const char *filename, double offset)
 {
-    ofstream file(filename);
+    std::ofstream file(filename);
     if (file.fail()) return false;
     write(file, units_are_seconds, offset);
     file.close();

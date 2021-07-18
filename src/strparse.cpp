@@ -1,8 +1,8 @@
 #include <string>
 #include <cstring>
 // #include <iostream>  -- for debugging (cout)
-#include "ctype.h"
-using namespace std;
+#include <cctype>
+// using namespace std;
 #include "strparse.h"
 
 void String_parse::skip_space()
@@ -19,7 +19,7 @@ char String_parse::peek()
 }
 
 
-void String_parse::get_nonspace_quoted(string &field)
+void String_parse::get_nonspace_quoted(std::string &field)
 {
     field.clear();
     skip_space();
@@ -42,7 +42,7 @@ void String_parse::get_nonspace_quoted(string &field)
         }
         if ((*str)[pos]) {
             field.append(1, (*str)[pos]);
-            pos = pos + 1;    
+            pos = pos + 1;
         }
     }
 }
@@ -51,7 +51,7 @@ void String_parse::get_nonspace_quoted(string &field)
 static const char *const escape_chars[] = {"\\n", "\\t", "\\\\", "\\r", "\\\""};
 
 
-void string_escape(string &result, const char *str, const char *quote)
+void string_escape(std::string &result, const char *str, const char *quote)
 {
     int length = (int) strlen(str);
     if (quote[0]) {
@@ -78,10 +78,10 @@ void String_parse::get_remainder(std::string &field)
     field.clear();
     skip_space();
     int len = str->length() - pos;
-    if ((len > 0) && ((*str)[len - 1] == '\n')) { // if str ends in newline, 
+    if ((len > 0) && ((*str)[len - 1] == '\n')) { // if str ends in newline,
         len--; // reduce length to ignore newline
     }
     field.insert(0, *str, pos, len);
 }
 
-    
+

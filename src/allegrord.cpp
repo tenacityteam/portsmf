@@ -1,23 +1,24 @@
-#include "assert.h"
-#include "stdlib.h"
-#include "string.h"
-#include "ctype.h"
-#include "trace.h"
+#include <cassert>
+//#include <cstdlib> -- commented out and nothing failed to compile, maybe not needed
+#include <cstring>
+//#include <cctype>
 #include <string>
-#include <fstream>
-#include <algorithm>
+//#include <fstream>
+#include <algorithm> // transform
 #include "strparse.h"
 #include "allegro.h"
 #include "algrd_internal.h"
+#include "trace.h"
 
-using namespace std;
+// using namespace std;
+using std::string;
 
 #define streql(s1, s2) (strcmp(s1, s2) == 0)
 #define field_max 80
 
 class Alg_reader {
 public:
-    istream *file;
+    std::istream *file;
     string input_line;
     int line_no;
     String_parse line_parser;
@@ -30,7 +31,7 @@ public:
     double offset;
     bool offset_found;
 
-    Alg_reader(istream *a_file, Alg_seq_ptr new_seq);
+    Alg_reader(std::istream *a_file, Alg_seq_ptr new_seq);
     void readline();
     Alg_parameters_ptr process_attributes(Alg_parameters_ptr attributes,
                                           double time);
@@ -67,7 +68,7 @@ double Alg_reader::parse_pitch(string &field)
 
 // it is the responsibility of the caller to delete
 // the seq
-Alg_reader::Alg_reader(istream *a_file, Alg_seq_ptr new_seq)
+Alg_reader::Alg_reader(std::istream *a_file, Alg_seq_ptr new_seq)
 {
     file = a_file; // save the file
     line_parser_flag = false;
@@ -80,7 +81,7 @@ Alg_reader::Alg_reader(istream *a_file, Alg_seq_ptr new_seq)
 }
 
 
-Alg_error alg_read(istream &file, Alg_seq_ptr new_seq, double *offset_ptr)
+Alg_error alg_read(std::istream &file, Alg_seq_ptr new_seq, double *offset_ptr)
     // read a sequence from allegro file
 {
     assert(new_seq);
@@ -116,19 +117,19 @@ Alg_parameters_ptr Alg_reader::process_attributes(
     if (attributes) {
         Alg_parameters_ptr a;
         bool in_seconds = seq->get_units_are_seconds();
-        if (a = Alg_parameters::remove_key(&attributes, "tempor")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "tempor"))) {
             double tempo = a->parm.r;
             seq->insert_tempo(tempo, seq->get_time_map()->time_to_beat(time));
         }
-        if (a = Alg_parameters::remove_key(&attributes, "beatr")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "beatr"))) {
             double beat = a->parm.r;
             seq->insert_beat(time, beat);
         }
-        if (a = Alg_parameters::remove_key(&attributes, "timesig_numr")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "timesig_numr"))) {
             tsnum = a->parm.r;
             ts_flag = true;
         }
-        if (a = Alg_parameters::remove_key(&attributes, "timesig_denr")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "timesig_denr"))) {
             tsden = a->parm.r;
             ts_flag = true;
         }
@@ -309,8 +310,8 @@ bool Alg_reader::parse()
                 } else {
                     line_parser.get_nonspace_quoted(field);
                     pk = line_parser.peek();
-                    // attributes are parsed as two adjacent nonspace_quoted 
-                    // tokens so we have to conditionally call 
+                    // attributes are parsed as two adjacent nonspace_quoted
+                    // tokens so we have to conditionally call
                     // get_nonspace_quoted() again
                     if (pk && !isspace(pk)) {
                         string field2;
@@ -335,7 +336,7 @@ bool Alg_reader::parse()
             //   C4 -- OK, key is 60, pitch is 60
             //   <nothing> -- OK, key and pitch from before
             //   K200 P60 -- ok, pitch is 60
-            //   K200 with neither P60 nor C4 uses 
+            //   K200 with neither P60 nor C4 uses
             //       pitch from before
 
             // figure out what the key/instance is:
@@ -426,7 +427,7 @@ long Alg_reader::parse_chan(string &field)
     const char *p = int_string;
     char c;
     // check that all chars in int_string are digits or '-':
-    while (c = *p++) {
+    while ((c = *p++)) {
         if (!isdigit(c) && c != '-') {
             parse_error(field, p - field.c_str() - 1, msg);
             return 0;
@@ -453,7 +454,7 @@ long Alg_reader::parse_int(string &field)
     const char *p = int_string;
     char c;
     // check that all chars in int_string are digits:
-    while (c = *p++) {
+    while ((c = *p++)) {
         if (!isdigit(c)) {
             parse_error(field, p - field.c_str() - 1, msg);
             return 0;
@@ -533,9 +534,9 @@ double Alg_reader::parse_dur(string &field, double base)
         string real_string = field.substr(1, last - 1);
         dur = atof(real_string.c_str());
         // convert dur from seconds to beats
-        dur = seq->get_time_map()->time_to_beat(base + dur) - 
+        dur = seq->get_time_map()->time_to_beat(base + dur) -
               seq->get_time_map()->time_to_beat(base);
-    } else if (p = strchr(durs, toupper(field[1]))) {
+    } else if ((p = strchr(durs, toupper(field[1])))) {
         dur = duration_lookup[p - durs];
         last = 2;
     } else {
@@ -549,7 +550,7 @@ double Alg_reader::parse_dur(string &field, double base)
 }
 
 
-double Alg_reader::parse_after_dur(double dur, string &field, 
+double Alg_reader::parse_after_dur(double dur, string &field,
                                    int n, double base)
 {
     if ((int) field.length() == n) {
@@ -580,8 +581,8 @@ double Alg_reader::parse_after_dur(double dur, string &field,
 struct loud_lookup_struct {
     const char *str;
     int val;
-} loud_lookup[] = { {"FFF", 127}, {"FF", 120}, {"F", 110}, {"MF", 100}, 
-                    {"MP", 90}, {"P", 80}, {"PP", 70}, {"PPP", 60}, 
+} loud_lookup[] = { {"FFF", 127}, {"FF", 120}, {"F", 110}, {"MF", 100},
+                    {"MP", 90}, {"P", 80}, {"PP", 70}, {"PPP", 60},
                     {NULL, 0} };
 
 
@@ -620,7 +621,7 @@ long Alg_reader::parse_key(string &field)
         // This routine would not have been called if field = "P<number>"
         // so it must be "K<number>" so <number> must be an integer.
         return parse_int(field);
-    } else if (p = strchr(pitches, toupper(field[1]))) {
+    } else if ((p = strchr(pitches, toupper(field[1])))) {
         long key = key_lookup[p - pitches];
         key = parse_after_key(key, field, 2);
         return key;
@@ -706,10 +707,10 @@ bool Alg_reader::parse_val(Alg_parameter_ptr param, string &s, int i)
         string r = s.substr(i + 1, len - i - 2);
         param->a = symbol_table.insert_string(r.c_str());
     } else if (param->attr_type() == 'l') {
-        if (streql(s.c_str() + i, "true") || 
+        if (streql(s.c_str() + i, "true") ||
             streql(s.c_str() + i, "t")) {
             param->l = true;
-        } else if (streql(s.c_str() + i, "false") || 
+        } else if (streql(s.c_str() + i, "false") ||
                    streql(s.c_str() + i, "nil")) {
             param->l = false;
         } else return false;
