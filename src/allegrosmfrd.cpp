@@ -37,7 +37,7 @@ public:
 
     Alg_midifile_reader(std::istream &f, Alg_seq_ptr new_seq) {
         file = &f;
-        note_list = NULL;
+        note_list = nullptr;
         seq = new_seq;
         channel_offset_per_track = 0;
         channel_offset_per_port = 16;
@@ -45,7 +45,7 @@ public:
         meta_channel = -1;
         port = 0;
     }
-    // delete destroys the seq member as well, so set it to NULL if you
+    // delete destroys the seq member as well, so set it to nullptr if you
     // copied the pointer elsewhere
     ~Alg_midifile_reader();
     // the following is used to load the Alg_seq from the file:
@@ -132,7 +132,7 @@ void Alg_midifile_reader::Mf_endtrack()
     // note: track is already part of seq, so do not add it here
     // printf("finished track, length %d number %d\n", track->len, track_num / 100);
     channel_offset += seq->channel_offset_per_track;
-    track = NULL;
+    track = nullptr;
     double now = get_time();
     if (seq->get_beat_dur() < now) seq->set_beat_dur(now);
     meta_channel = -1;
@@ -249,7 +249,7 @@ void Alg_midifile_reader::update(int chan, int key, Alg_parameter_ptr param)
     update->parameter = *param;
     // prevent the destructor from destroying the string twice!
     // the new Update takes the string from param
-    if (param->attr_type() == 's') param->s = NULL;
+    if (param->attr_type() == 's') param->s = nullptr;
     track->append(update);
 }
 

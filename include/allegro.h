@@ -77,7 +77,7 @@ class Alg_atoms {
 public:
     Alg_atoms() {
         maxlen = len = 0;
-        atoms = NULL;
+        atoms = nullptr;
     }
     // Note: the code is possibly more correct and faster without the
     // following destructor, which will only run after the program takes
@@ -249,7 +249,7 @@ public:
         // 'r' = real (double), 'l' = logical (bool), 'i' = integer (long),
         // 'a' = atom (char *), a unique string stored in Alg_seq
     // get the string value
-    const char *get_string_value(const char *attr, const char *value = NULL);
+    const char *get_string_value(const char *attr, const char *value = nullptr);
     // get the real value
     double get_real_value(const char *attr, double value = 0.0);
     // get the logical value
@@ -257,7 +257,7 @@ public:
     // get the integer value
     long get_integer_value(const char *attr, long value = 0);
     // get the atom value
-    const char *get_atom_value(const char *attr, const char *value = NULL);
+    const char *get_atom_value(const char *attr, const char *value = nullptr);
     void delete_attribute(const char *attr);   // delete an attribute/value pair
         // (ignore if no matching attribute/value pair exists)
 
@@ -298,7 +298,7 @@ public:
     float loud;  // dynamic corresponding to MIDI velocity
     double dur;   // duration in seconds (normally to release point)
     Alg_parameters_ptr parameters; // attribute/value pair list
-    Alg_note() { type = 'n'; parameters = NULL; }
+    Alg_note() { type = 'n'; parameters = nullptr; }
     void show();
 } *Alg_note_ptr;
 
@@ -341,7 +341,7 @@ public:
     }
     Alg_events() {
         maxlen = len = 0;
-        events = NULL;
+        events = nullptr;
         last_note_off = 0;
         in_use = false;
     }
@@ -393,7 +393,7 @@ public:
     // particularly fast on an Alg_seq.
     virtual Alg_event_ptr &operator[](int i);
     Alg_event_list() { sequence_number = 0;
-        beat_dur = 0.0; real_dur = 0.0; events_owner = NULL; type = 'e'; }
+        beat_dur = 0.0; real_dur = 0.0; events_owner = nullptr; type = 'e'; }
     Alg_event_list(Alg_track *owner);
 
     char get_type() { return type; }
@@ -456,7 +456,7 @@ public:
     }
     Alg_beats() {
         maxlen = len = 0;
-        beats = NULL;
+        beats = nullptr;
         expand();
         beats[0].time = 0;
         beats[0].beat = 0;
@@ -530,8 +530,8 @@ class Serial_buffer {
     long len;
   public:
     Serial_buffer() {
-        buffer = NULL;
-        ptr = NULL;
+        buffer = nullptr;
+        ptr = nullptr;
         len = 0;
     }
     virtual ~Serial_buffer() { }
@@ -657,8 +657,8 @@ public:
         assert(i >= 0 && i < len);
         return events[i];
     }
-    Alg_track() { units_are_seconds = false; time_map = NULL;
-                  set_time_map(NULL); type = 't'; }
+    Alg_track() { units_are_seconds = false; time_map = nullptr;
+                  set_time_map(nullptr); type = 't'; }
     // initialize empty track with a time map
     Alg_track(Alg_time_map *map, bool seconds);
 
@@ -668,11 +668,11 @@ public:
     // copy constructor: event_list is copied, map is installed and referenced
     Alg_track(Alg_event_list_ref event_list, Alg_time_map_ptr map,
               bool units_are_seconds);
-    virtual ~Alg_track() { // note: do not call set_time_map(NULL)!
+    virtual ~Alg_track() { // note: do not call set_time_map(nullptr)!
         if (time_map) {
             time_map->dereference();
         }
-        time_map = NULL;
+        time_map = nullptr;
     }
 
     // Returns a buffer containing a serialization of the
@@ -688,7 +688,7 @@ public:
     // If the track is really an Alg_seq and you need to access an
     // Alg_seq method, coerce to an Alg_seq with this function:
     Alg_seq_ptr to_alg_seq() {
-        return (get_type() == 's' ? (Alg_seq_ptr) this : NULL); }
+        return (get_type() == 's' ? (Alg_seq_ptr) this : nullptr); }
 
     // Are we using beats or seconds?
     bool get_units_are_seconds() { return units_are_seconds; }
@@ -699,11 +699,11 @@ public:
     double get_dur() { return (units_are_seconds ? real_dur : beat_dur); }
 
     // Every Alg_track may have an associated time_map. If no map is
-    // specified, or if you set_time_map(NULL), then the behavior
+    // specified, or if you set_time_map(nullptr), then the behavior
     // should be as if there is a constant tempo of 100 beats/minute
     // (this constant is determined by ALG_DEFAULT_BPM).
     // Recommendation: create a static global tempo map object. When
-    // any operation that needs a tempo map gets NULL, use the global
+    // any operation that needs a tempo map gets nullptr, use the global
     // tempo map. (Exception: any operation that would modify the
     // tempo map should raise an error -- you don't want to change the
     // default tempo map.)
@@ -860,7 +860,7 @@ private:
 public:
     Alg_time_sigs() {
         maxlen = len = 0;
-        time_sigs = NULL;
+        time_sigs = nullptr;
     }
     Alg_time_sig &operator[](int i) { // fetch a time signature
         assert(i >= 0 && i < len);
@@ -900,7 +900,7 @@ public:
     long length() { return len; }
     Alg_tracks() {
         maxlen = len = 0;
-        tracks = NULL;
+        tracks = nullptr;
     }
     ~Alg_tracks();
     // Append a track to tracks. This Alg_tracks becomes the owner of track.
@@ -961,7 +961,7 @@ public:
         seq = s;
         note_off_flag = note_off;
         maxlen = len = 0;
-        pending_events = NULL;
+        pending_events = nullptr;
     }
     // Normally, iteration is over the events in the one sequence used
     // to instatiate the iterator (see above), but with this method, you
@@ -971,14 +971,14 @@ public:
     // before merging/sorting. You should call begin_seq() for each
     // sequence to be included in the iteration unless you call begin()
     // (see below).
-    void begin_seq(Alg_seq_ptr s, void *cookie = NULL, double offset = 0.0);
+    void begin_seq(Alg_seq_ptr s, void *cookie = nullptr, double offset = 0.0);
     ~Alg_iterator();
     // Prepare to enumerate events in order. If note_off_flag is true, then
     // iteration_next will merge note-off events into the sequence. If you
     // call begin(), you should not normally call begin_seq(). See above.
-    void begin(void *cookie = NULL) { begin_seq(seq, cookie); }
-    // return next event (or NULL). If iteration_begin was called with
-    // note_off_flag = true, and if note_on is not NULL, then *note_on
+    void begin(void *cookie = nullptr) { begin_seq(seq, cookie); }
+    // return next event (or nullptr). If iteration_begin was called with
+    // note_off_flag = true, and if note_on is not nullptr, then *note_on
     // is set to true when the result value represents a note-on or update.
     // (With note_off_flag, each Alg_note event is returned twice, once
     // at the note-on time, with *note_on == true, and once at the note-off
@@ -986,8 +986,8 @@ public:
     // cookie corresponding to the event is stored at that address
     // If end_time is 0, iterate through the entire sequence, but if
     // end_time is non_zero, stop iterating at the last event before end_time
-    Alg_event_ptr next(bool *note_on = NULL, void **cookie_ptr = NULL,
-                       double *offset_ptr = NULL, double end_time = 0);
+    Alg_event_ptr next(bool *note_on = nullptr, void **cookie_ptr = nullptr,
+                       double *offset_ptr = nullptr, double end_time = 0);
     // Sometimes, the caller wants to receive note-off events for a subset
     // of the notes, typically the notes that are played and need to be
     // turned off. In this case, when a note is turned on, the client
@@ -1029,9 +1029,9 @@ public:
     Alg_seq(Alg_track_ptr track) { seq_from_track(*track); }
     void seq_from_track(Alg_track_ref tr);
     // create from file:
-    Alg_seq(std::istream &file, bool smf, double *offset_ptr = NULL);
+    Alg_seq(std::istream &file, bool smf, double *offset_ptr = nullptr);
     // create from filename
-    Alg_seq(const char *filename, bool smf, double *offset_ptr = NULL);
+    Alg_seq(const char *filename, bool smf, double *offset_ptr = nullptr);
     virtual ~Alg_seq();
     int get_read_error() { return error; }
     void serialize(void **buffer, long *bytes);
