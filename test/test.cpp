@@ -117,7 +117,7 @@ void test5()
 {
     Alg_seq_ptr seq = make_score();
     ofstream file("test5.gro");
-    if (file.is_open()) {
+    if (!file.is_open()) {
     printf("could not open test5.gro for writing");
     return;
     }
@@ -760,7 +760,76 @@ void test33() // cut and inspect some notes
 
 int main()
 {
-    test33();
-    printf("Test 33 done, type return to exit\n");
+    printf("*** Test 1 ...\n");
+    test1();
+    printf("*** Test 2 ...\n");
+    test2();
+    printf("*** Test 3 ...\n");
+    test3();
+    printf("*** Test 4 ...\n");
+    test4();
+    printf("*** Test 5 ...\n");
+    test5();
+    printf("*** Test 6 ...\n");
+    test6();
+    printf("*** Test 7 ...\n");
+    test7();
+    printf("*** Test 8 ...\n");
+    test8();
+    printf("*** Test 9 ...\n");
+    test9();
+    printf("*** Test 10 ...\n");
+    test10();
+    printf("*** Test 11 ...\n");
+    test11();
+    printf("*** Test 12 ...\n");
+    test12();
+    printf("*** Test 13 ...\n");
+    test13();
+    printf("*** Test 14 ...\n");
+    test14();
+    printf("*** Test 15 ...\n");
+    test15();
+    printf("*** Test 16 ...\n");
+    test16();
+    // test 17 (cut) segfaults due to duration not being set
+    // assuming that 19 and 21 (copy and paste) fail the same
+    printf("*** Test 17 ... DISABLED\n");
+    //test17();
+    printf("*** Test 18 ...\n");
+    test18();
+    printf("*** Test 19 ... DISABLED\n");
+    //test19();
+    printf("*** Test 20 ...\n");
+    test20();
+    printf("*** Test 21 ... DISABLED\n");
+    //test21();
+    printf("*** Test 22 ...\n");
+    test22();
+    printf("*** Test 23 ...\n");
+    test23();
+    printf("*** Test 24 ...\n");
+    test24();
+    printf("*** Test 25 ...\n");
+    test25();
+    printf("*** Test 26 ...\n");
+    test26();
+    printf("*** Test 27 ...\n");
+    test27();
+    printf("*** Test 28 ...\n");
+    test28();
+    printf("*** Test 29 ...\n");
+    test29();
+    printf("*** Test 30 ...\n");
+    test30();
+    printf("*** Test 31 ...\n");
+    test31();
+    // these test files are missing, not sure if they were
+    // ever in the repo to begin with
+    printf("*** Test 32 ... DISABLED\n");
+    //test32();
+    printf("*** Test 33 ... DISABLED\n");
+    //test33();
+    printf("press enter to exit\n");
     getchar();
 }
