@@ -1,8 +1,6 @@
 #include <string>
 #include <cstring>
-// #include <iostream>  -- for debugging (cout)
-#include "ctype.h"
-using namespace std;
+#include <cctype>
 #include "strparse.h"
 
 void String_parse::skip_space()
@@ -19,7 +17,7 @@ char String_parse::peek()
 }
 
 
-void String_parse::get_nonspace_quoted(string &field)
+void String_parse::get_nonspace_quoted(std::string &field)
 {
     field.clear();
     skip_space();
@@ -51,7 +49,7 @@ void String_parse::get_nonspace_quoted(string &field)
 static const char *const escape_chars[] = {"\\n", "\\t", "\\\\", "\\r", "\\\""};
 
 
-void string_escape(string &result, const char *str, const char *quote)
+void string_escape(std::string &result, const char *str, const char *quote)
 {
     int length = (int) strlen(str);
     if (quote[0]) {

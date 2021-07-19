@@ -48,7 +48,7 @@
 
 #ifndef ALLEGRO_H
 #define ALLEGRO_H
-#include <assert.h>
+#include <cassert>
 #include <istream>
 #include <ostream>
 
