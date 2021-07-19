@@ -62,7 +62,7 @@ protected:
     double get_time();
     void update(int chan, int key, Alg_parameter_ptr param);
     void *Mf_malloc(size_t size) { return malloc(size); }
-    void Mf_free(void *obj, size_t size) { free(obj); }
+    void Mf_free(void *obj, size_t /*size*/) { free(obj); }
     /* Methods to be called while processing the MIDI file. */
     void Mf_starttrack();
     void Mf_endtrack();
@@ -171,7 +171,7 @@ void Alg_midifile_reader::Mf_error(const char *msg)
 }
 
 
-void Alg_midifile_reader::Mf_header(int format, int ntrks, int division)
+void Alg_midifile_reader::Mf_header(int format, int /*ntrks*/, int division)
 {
     if (format > 1) {
         char msg[80];
@@ -216,7 +216,7 @@ void Alg_midifile_reader::Mf_on(int chan, int key, int vel)
 }
 
 
-void Alg_midifile_reader::Mf_off(int chan, int key, int vel)
+void Alg_midifile_reader::Mf_off(int chan, int key, int /*vel*/)
 {
     double time = get_time();
     Alg_note_list_ptr *p = &note_list;
@@ -339,13 +339,13 @@ void Alg_midifile_reader::Mf_sysex(int len, unsigned char *msg)
 }
 
 
-void Alg_midifile_reader::Mf_arbitrary(int len, unsigned char *msg)
+void Alg_midifile_reader::Mf_arbitrary(int /*len*/, unsigned char* /*msg*/)
 {
     Mf_error("arbitrary data ignored");
 }
 
 
-void Alg_midifile_reader::Mf_metamisc(int type, int len, unsigned char *msg)
+void Alg_midifile_reader::Mf_metamisc(int type, int /*len*/, unsigned char* /*msg*/)
 {
     char text[128];
 #if defined(_WIN32)
@@ -359,7 +359,7 @@ void Alg_midifile_reader::Mf_metamisc(int type, int len, unsigned char *msg)
 }
 
 
-void Alg_midifile_reader::Mf_seqnum(int n)
+void Alg_midifile_reader::Mf_seqnum(int /*n*/)
 {
     Mf_error("seqnum data ignored");
 }
@@ -391,7 +391,7 @@ void Alg_midifile_reader::Mf_smpte(int hours, int mins, int secs,
 }
 
 
-void Alg_midifile_reader::Mf_timesig(int i1, int i2, int i3, int i4)
+void Alg_midifile_reader::Mf_timesig(int i1, int i2, int /*i3*/, int /*i4*/)
 {
     seq->set_time_sig(double(get_currtime()) / divisions, i1, 1 << i2);
 }

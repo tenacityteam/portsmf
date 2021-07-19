@@ -1102,7 +1102,7 @@ public:
     // add_event takes a pointer to an event on the heap. The event is not
     // copied, and this Alg_seq becomes the owner and freer of the event.
     void add_event(Alg_event_ptr event, int track_num);
-    void add(Alg_event_ptr event) { assert(false); } // call add_event instead
+    void add(Alg_event_ptr /*event*/) { assert(false); } // call add_event instead
     // get the tempo starting at beat
     double get_tempo(double beat);
     bool set_tempo(double bpm, double start_beat, double end_beat);

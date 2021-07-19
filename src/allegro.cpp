@@ -2383,6 +2383,7 @@ void Alg_time_sigs::paste(double start, Alg_seq *seq)
     double num_of_insert = 4.0;
     double den_of_insert = 4.0;
     double beat_of_insert = 0.0;
+    // TODO: check if first_from_index is needed
     int first_from_index = 0; // where to start copying from
     if (from.length() > 0 && from[0].beat < ALG_EPS) {
         // there is an initial time signature in "from"
@@ -2392,6 +2393,7 @@ void Alg_time_sigs::paste(double start, Alg_seq *seq)
         // we can start copying at index == 1:
         first_from_index = 1;
     }
+    static_cast<void>(first_from_index); // first_from_index is unused, so silence warning for now
     // compare time signatures to see if we need a change at start:
     if (num_before_splice != num_of_insert ||
         den_before_splice != den_of_insert) {
