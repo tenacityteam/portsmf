@@ -713,11 +713,12 @@ bool Alg_reader::parse_val(Alg_parameter_ptr param, string &s, int i)
     } else if (isdigit(s[i]) || s[i] == '-' || s[i] == '.') {
         int pos = i;
         bool period = false;
-        int sign = 1;
+        int sign = 1; // TODO: check if sign is needed
         if (s[pos] == '-') {
             sign = -1;
             pos++;
         }
+        static_cast<void>(sign); // sign is unused, so silence warning for now
         while (pos < len) {
             if (isdigit(s[pos])) {
                 ;
