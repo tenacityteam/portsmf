@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <cstring>
 #include <fstream>
+#include <stdexcept>
 #include "allegro.h"
 #include "algrd_internal.h"
 #include "algsmfrd_internal.h"
@@ -2886,7 +2887,8 @@ Alg_event_ptr &Alg_seq::operator[](int i)
         }
         tr++;
     }
-    assert(false); // out of bounds
+    // throw runtime error instead of using assert
+    throw std::runtime_error("&Alg_seq::operator[] - out of bounds");
 }
 #if defined(_WIN32)
 #pragma warning(default: 4715)
