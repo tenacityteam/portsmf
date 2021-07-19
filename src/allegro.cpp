@@ -2678,7 +2678,7 @@ void Alg_iterator::show()
 {
     for (int i = 0; i < len; i++) {
         Alg_pending_event_ptr p = &(pending_events[i]);
-        printf("    %d: %p[%ld]@%g on %d\n", i, p->events, p->index,
+        printf("    %d: %p[%ld]@%g on %d\n", i, static_cast<void*>(p->events), p->index,
                p->offset, p->note_on);
     }
 }
