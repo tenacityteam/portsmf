@@ -23,10 +23,12 @@
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define ROUND(x) ((int) ((x) + 0.5))
 
+#if defined(_WIN32)
 // 4311 is type cast ponter to long warning
 // 4996 is warning against strcpy
 // 4267 is size_t to long warning
 #pragma warning(disable: 4311 4996 4267)
+#endif
 Alg_atoms symbol_table;
 Serial_read_buffer Alg_track::ser_read_buf; // declare the static variables
 Serial_write_buffer Alg_track::ser_write_buf;
@@ -1535,7 +1537,9 @@ Alg_track *Alg_track::unserialize(void *buffer, long len)
 }
 
 
+#if defined(_WIN32)
 #pragma warning(disable: 4800) // long to bool performance warning
+#endif
 
 /* Note: this Alg_seq must have a default initialized Alg_time_map.
  * It will be filled in with data from the ser_read_buf buffer.
@@ -1668,7 +1672,9 @@ void Alg_track::unserialize_parameter(Alg_parameter_ptr parm_ptr)
     }
 }
 
+#if defined(_WIN32)
 #pragma warning(default: 4800)
+#endif
 
 void Alg_track::set_time_map(Alg_time_map *map)
 {
@@ -2860,7 +2866,9 @@ Alg_track_ptr Alg_seq::track(int i)
     return &(track_list[i]);
 }
 
+#if defined(_WIN32)
 #pragma warning(disable: 4715) // ok not to return a value here
+#endif
 
 Alg_event_ptr &Alg_seq::operator[](int i)
 {
@@ -2877,7 +2885,9 @@ Alg_event_ptr &Alg_seq::operator[](int i)
     }
     assert(false); // out of bounds
 }
+#if defined(_WIN32)
 #pragma warning(default: 4715)
+#endif
 
 
 void Alg_seq::convert_to_beats()

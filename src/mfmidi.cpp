@@ -68,10 +68,14 @@ int Midifile_reader::readmt(const char *s, int skip)
         goto retry;
     }
     err:
+#if defined(_WIN32)
 #pragma warning(disable: 4996) // strcpy is safe since strings have known lengths
+#endif
     (void) strcpy(buff,errmsg);
     (void) strcat(buff,s);
+#if defined(_WIN32)
 #pragma warning(default: 4996) // turn it back on
+#endif
     mferror(buff);
     return(0);
 }
@@ -257,9 +261,13 @@ void Midifile_reader::readtrack()
 void Midifile_reader::badbyte(int c)
 {
     char buff[32];
+#if defined(_WIN32)
 #pragma warning(disable: 4996) // safe in this case
+#endif
     (void) sprintf(buff,"unexpected byte: 0x%02x",c);
+#if defined(_WIN32)
 #pragma warning(default: 4996)
+#endif
     mferror(buff);
 }
 
