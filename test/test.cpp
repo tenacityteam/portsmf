@@ -739,7 +739,7 @@ void test33() // cut and inspect some notes
     seq->convert_to_seconds();
 
     Alg_time_map_ptr tm = seq->get_time_map();
-    printf("time map %p before\n", tm);
+    printf("time map %p before\n", static_cast<void*>(tm));
     // tm->show();
     printf("timestamp before %.15g\n", tm->beats[tm->locate_time(3.74)].time);
     ofstream ofile("before-33.alg", ios::out | ios::binary);
@@ -749,7 +749,7 @@ void test33() // cut and inspect some notes
     Alg_seq_ptr cut = seq->cut(0.0, 3.0, false);
 
     tm = seq->get_time_map();
-    printf("timemap %p after\n", tm);
+    printf("timemap %p after\n", static_cast<void*>(tm));
     // tm->show();
     printf("timestamp after %.15g\n", tm->beats[tm->locate_time(0.74)].time);
     ofile.open("after-33.alg",  ios::out | ios::binary);
