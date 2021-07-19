@@ -130,7 +130,7 @@ public:
     Alg_parameter() { attr = "i"; }
     ~Alg_parameter();
     void copy(Alg_parameter *); // copy from another parameter
-    const char attr_type() { return alg_attr_type(attr); }
+    char attr_type() { return alg_attr_type(attr); }
     const char *attr_name() { return alg_attr_name(attr); }
     void set_attr(Alg_attribute a) { attr = a; }
     void show();
@@ -759,7 +759,7 @@ public:
     // COPIED, NOT SHARED.
     // The type of seq must be Alg_seq if seq is an Alg_seq, or
     // Alg_track if seq is an Alg_track or an Alg_event_list.
-    virtual void paste(double t, Alg_event_list *seq); // Shifts notes
+    void paste(double t, Alg_event_list *seq); // Shifts notes
 
     // Merges two sequences with a certain offset. The offset is
     // interpreted as either beats or seconds according to the
