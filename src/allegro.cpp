@@ -1263,6 +1263,7 @@ Alg_event_ptr Alg_track::copy_event(Alg_event_ptr event)
 
 
 Alg_track::Alg_track(Alg_track &track)
+    : Alg_event_list(track)
 {
     type = 't';
     time_map = nullptr;
