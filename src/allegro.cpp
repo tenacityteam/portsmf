@@ -9,19 +9,15 @@
 04 apr 03 -- fixed bug in add_track that caused infinite loop
 */
 
-#include "assert.h"
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
-#include "memory.h"
-#include <iostream>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
 #include <fstream>
-using namespace std;
 #include "allegro.h"
 #include "algrd_internal.h"
 #include "algsmfrd_internal.h"
 // #include "trace.h" -- only needed for debugging
-#include "math.h"
 
 #define STREQL(x, y) (strcmp(x, y) == 0)
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
@@ -2431,14 +2427,14 @@ void Alg_time_sigs::paste(double start, Alg_seq *seq)
     double measures = (start - beat_after_splice) / beats_per_measure;
     // Measures might be slightly negative due to rounding. Use max()
     // to eliminate any negative rounding error:
-    int imeasures = int(max(measures, 0.0));
+    int imeasures = int(std::max(measures, 0.0));
     double old_bar_loc = beat_after_splice + (imeasures * beats_per_measure);
     if (old_bar_loc < start) old_bar_loc += beats_per_measure;
     // now old_bar_loc is the original first bar position after start
     // Do similar calculation for position after end after the insertion:
     // beats_per_measure already calculated because signatures match
     measures = (start + dur - beat_of_insert) / beats_per_measure;
-    imeasures = int(max(measures, 0.0));
+    imeasures = int(std::max(measures, 0.0));
     double new_bar_loc = beat_of_insert + (imeasures * beats_per_measure);
     if (new_bar_loc < start + dur) new_bar_loc += beats_per_measure;
     // old_bar_loc should be shifted by dur:
@@ -2783,7 +2779,7 @@ bool Alg_iterator::remove_next(Alg_events_ptr &events, long &index,
 Alg_seq::Alg_seq(const char *filename, bool smf, double *offset_ptr)
 {
     basic_initialization();
-    ifstream inf(filename, smf ? ios::binary | ios::in : ios::in);
+    std::ifstream inf(filename, smf ? std::ios::binary | std::ios::in : std::ios::in);
     if (inf.fail()) {
         error = alg_error_open;
         return;
@@ -2798,7 +2794,7 @@ Alg_seq::Alg_seq(const char *filename, bool smf, double *offset_ptr)
 }
 
 
-Alg_seq::Alg_seq(istream &file, bool smf, double *offset_ptr)
+Alg_seq::Alg_seq(std::istream &file, bool smf, double *offset_ptr)
 {
     basic_initialization();
     if (smf) {
@@ -3044,7 +3040,7 @@ void Alg_seq::insert_silence(double t, double len)
     // Final duration is defined to be t + len + whatever was
     // in the sequence after t (if any). This translates to
     // t + len + max(dur - t, 0)
-    set_dur(t + len + max(get_dur() - t, 0.0));
+    set_dur(t + len + std::max(get_dur() - t, 0.0));
 }
 
 

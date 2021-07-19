@@ -1,17 +1,13 @@
 // midifile reader
 
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
-#include "assert.h"
-#include <string>
+#include <cassert>
+#include <cstring>
 #include <fstream>
 #include "allegro.h"
 #include "algsmfrd_internal.h"
 #include "mfmidi.h"
 #include "trace.h"
 
-using namespace std;
 
 typedef class Alg_note_list {
 public:
@@ -24,7 +20,7 @@ public:
 
 class Alg_midifile_reader: public Midifile_reader {
 public:
-    istream *file;
+    std::istream *file;
     Alg_seq_ptr seq;
     int divisions;
     Alg_note_list_ptr note_list;
@@ -39,7 +35,7 @@ public:
     // while reading, this is channel_offset_per_track * track_num
     int channel_offset;
 
-    Alg_midifile_reader(istream &f, Alg_seq_ptr new_seq) {
+    Alg_midifile_reader(std::istream &f, Alg_seq_ptr new_seq) {
         file = &f;
         note_list = NULL;
         seq = new_seq;
@@ -444,7 +440,7 @@ void Alg_midifile_reader::Mf_text(int type, int len, unsigned char *msg)
 
 
 // parse file into a seq.
-Alg_error alg_smf_read(istream &file, Alg_seq_ptr new_seq)
+Alg_error alg_smf_read(std::istream &file, Alg_seq_ptr new_seq)
 {
     assert(new_seq);
     Alg_midifile_reader ar(file, new_seq);

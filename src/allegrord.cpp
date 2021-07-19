@@ -1,23 +1,20 @@
-#include "assert.h"
-#include "stdlib.h"
-#include "string.h"
-#include "ctype.h"
-#include "trace.h"
+#include <cassert>
+#include <cstring>
 #include <string>
-#include <fstream>
 #include <algorithm>
 #include "strparse.h"
 #include "allegro.h"
 #include "algrd_internal.h"
+#include "trace.h"
 
-using namespace std;
+using std::string;
 
 #define streql(s1, s2) (strcmp(s1, s2) == 0)
 #define field_max 80
 
 class Alg_reader {
 public:
-    istream *file;
+    std::istream *file;
     string input_line;
     int line_no;
     String_parse line_parser;
@@ -30,7 +27,7 @@ public:
     double offset;
     bool offset_found;
 
-    Alg_reader(istream *a_file, Alg_seq_ptr new_seq);
+    Alg_reader(std::istream *a_file, Alg_seq_ptr new_seq);
     void readline();
     Alg_parameters_ptr process_attributes(Alg_parameters_ptr attributes,
                                           double time);
@@ -67,7 +64,7 @@ double Alg_reader::parse_pitch(string &field)
 
 // it is the responsibility of the caller to delete
 // the seq
-Alg_reader::Alg_reader(istream *a_file, Alg_seq_ptr new_seq)
+Alg_reader::Alg_reader(std::istream *a_file, Alg_seq_ptr new_seq)
 {
     file = a_file; // save the file
     line_parser_flag = false;
@@ -80,7 +77,7 @@ Alg_reader::Alg_reader(istream *a_file, Alg_seq_ptr new_seq)
 }
 
 
-Alg_error alg_read(istream &file, Alg_seq_ptr new_seq, double *offset_ptr)
+Alg_error alg_read(std::istream &file, Alg_seq_ptr new_seq, double *offset_ptr)
     // read a sequence from allegro file
 {
     assert(new_seq);

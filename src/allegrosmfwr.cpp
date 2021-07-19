@@ -1,13 +1,8 @@
 // allegrosmfwr.cpp -- Allegro Standard Midi File Write
 
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <errno.h>
+#include <cstring>
 #include <string>
-#include <iostream>
 #include <fstream>
-using namespace std;
 #include "allegro.h"
 
 // event_queue is a list element that keeps track of pending
@@ -34,7 +29,7 @@ public:
     // chan is actual_channel + channels_per_track * track_number
     // default is 100, set this to 0 to merge all tracks to 16 channels
 
-    void write(ostream &file /* , midiFileFormat = 1 */);
+    void write(std::ostream &file /* , midiFileFormat = 1 */);
 
 private:
     long previous_divs; // time in ticks of most recently written event
@@ -53,7 +48,7 @@ private:
     int to_midi_channel(int channel);
     int to_track(int channel);
 
-    ostream *out_file;
+    std::ostream *out_file;
 
     Alg_seq_ptr seq;
 
@@ -531,7 +526,7 @@ void Alg_smf_write::write_time_signature(int i)
 
 
 
-void Alg_smf_write::write(ostream &file)
+void Alg_smf_write::write(std::ostream &file)
 {
     int track_len_offset;
     int track_end_offset;
@@ -631,7 +626,7 @@ void Alg_smf_write::write_varinum(int value)
 }
 
 
-void Alg_seq::smf_write(ostream &file)
+void Alg_seq::smf_write(std::ostream &file)
 {
     Alg_smf_write writer(this);
     writer.write(file);
@@ -639,7 +634,7 @@ void Alg_seq::smf_write(ostream &file)
 
 bool Alg_seq::smf_write(const char *filename)
 {
-    ofstream outf(filename, ios::binary | ios::out);
+    std::ofstream outf(filename, std::ios::binary | std::ios::out);
     if (outf.fail()) return false;
     smf_write(outf);
     outf.close();
