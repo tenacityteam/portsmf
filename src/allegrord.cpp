@@ -57,7 +57,7 @@ double Alg_reader::parse_pitch(string &field)
         string real_string = field.substr(1, last - 1);
         return atof(real_string.c_str());
     } else {
-        return (double) parse_key(field);
+        return static_cast<double>(parse_key(field));
     }
 }
 
@@ -133,7 +133,9 @@ Alg_parameters_ptr Alg_reader::process_attributes(
             seq->set_time_sig(seq->get_time_map()->time_to_beat(time),
             tsnum, tsden);
         }
-        if (in_seconds) seq->convert_to_seconds();
+        if (in_seconds) {
+            seq->convert_to_seconds();
+        }
     }
     return attributes; // in case it was modified
 }
@@ -208,7 +210,9 @@ bool Alg_reader::parse()
             }
         } else {
             // we must have a track to insert into
-            if (seq->tracks() == 0) seq->add_track(0);
+            if (seq->tracks() == 0) {
+                seq->add_track(0);
+            }
             line_parser.get_nonspace_quoted(field);
             char pk = line_parser.peek();
             // attributes are parsed as two adjacent nonspace_quoted tokens
@@ -277,7 +281,7 @@ bool Alg_reader::parse()
                         parse_error(field, 0, "Dur specified twice");
                     } else {
                         // prepend 'U' to field, copy EOS too
-                        field.insert((unsigned int) 0, 1, 'U');
+                        field.insert(0u, 1, 'U');
                         dur = parse_dur(field, time);
                         dur_flag = true;
                     }
@@ -286,7 +290,7 @@ bool Alg_reader::parse()
                         parse_error(field, 0, "Pitch specified twice");
                     } else {
                         // prepend 'P' to field
-                        field.insert((unsigned int) 0, 1, 'P');
+                        field.insert(0u, 1, 'P');
                         new_pitch = parse_pitch(field);
                         new_pitch_flag = true;
                     }
@@ -340,7 +344,7 @@ bool Alg_reader::parse()
                 key = new_key;
             } else if (new_pitch_flag) {
                 // pitch was specified, but key was not; get key from pitch
-                key = (int) (new_pitch + 0.5); // round to integer key number
+                key = static_cast<int>(new_pitch + 0.5); // round to integer key number
             }
             if (new_pitch_flag) {
                 pitch = new_pitch;
@@ -361,11 +365,13 @@ bool Alg_reader::parse()
                     note_ptr->time = time;
                     note_ptr->dur = dur;
                     note_ptr->set_identifier(key);
-                    note_ptr->pitch = (float) pitch;
-                    note_ptr->loud = (float) loud;
+                    note_ptr->pitch = static_cast<float>(pitch);
+                    note_ptr->loud = static_cast<float>(loud);
                     note_ptr->parameters = attributes;
                     seq->add_event(note_ptr, track_num); // sort later
-                    if (seq->get_real_dur() < (time + dur)) seq->set_real_dur(time + dur);
+                    if (seq->get_real_dur() < (time + dur)) {
+                        seq->set_real_dur(time + dur);
+                    }
                 } else {
                     int update_key = -1;
                     // key must appear explicitly; otherwise
@@ -381,7 +387,9 @@ bool Alg_reader::parse()
                         new_upd->parameter.set_attr(symbol_table.insert_string("loudr"));
                         new_upd->parameter.r = pitch;
                         seq->add_event(new_upd, track_num);
-                        if (seq->get_real_dur() < time) seq->set_real_dur(time);
+                        if (seq->get_real_dur() < time) {
+                            seq->set_real_dur(time);
+                        }
                     }
                     if (attributes) {
                         while (attributes) {
@@ -491,7 +499,7 @@ double Alg_reader::parse_real(string &field)
     const char *msg = "Real expected";
     int last = find_real_in(field, 1);
     string real_string = field.substr(1, last - 1);
-    if (last <= 1 || last < (int) field.length()) {
+    if (last <= 1 || last < static_cast<int>(field.length())) {
        parse_error(field, 1, msg);
        return 0;
     }
@@ -512,7 +520,7 @@ void Alg_reader::parse_error(string &field, long offset, const char *message)
 }
 
 
-double duration_lookup[] = { 0.25, 0.5, 1.0, 2.0, 4.0 };
+double duration_lookup[] = {0.25, 0.5, 1.0, 2.0, 4.0};
 
 
 double Alg_reader::parse_dur(string &field, double base)
@@ -530,8 +538,8 @@ double Alg_reader::parse_dur(string &field, double base)
         string real_string = field.substr(1, last - 1);
         dur = atof(real_string.c_str());
         // convert dur from seconds to beats
-        dur = seq->get_time_map()->time_to_beat(base + dur) -
-              seq->get_time_map()->time_to_beat(base);
+        dur = seq->get_time_map()->time_to_beat(base + dur)
+            - seq->get_time_map()->time_to_beat(base);
     } else if ((p = strchr(durs, toupper(field[1])))) {
         dur = duration_lookup[p - durs];
         last = 2;
@@ -541,7 +549,7 @@ double Alg_reader::parse_dur(string &field, double base)
     }
     dur = parse_after_dur(dur, field, last, base);
     dur = seq->get_time_map()->beat_to_time(
-              seq->get_time_map()->time_to_beat(base) + dur) - base;
+        seq->get_time_map()->time_to_beat(base) + dur) - base;
     return dur;
 }
 
@@ -549,7 +557,7 @@ double Alg_reader::parse_dur(string &field, double base)
 double Alg_reader::parse_after_dur(double dur, string &field,
                                    int n, double base)
 {
-    if ((int) field.length() == n) {
+    if (static_cast<int>(field.length()) == n) {
         return dur;
     }
     if (toupper(field[n]) == 'T') {
@@ -592,7 +600,7 @@ double Alg_reader::parse_loud(string &field)
         transform(dyn.begin(), dyn.end(), dyn.begin(), ::toupper);
         for (int i = 0; loud_lookup[i].str; i++) {
             if (streql(loud_lookup[i].str, dyn.c_str())) {
-                return (double) loud_lookup[i].val;
+                return static_cast<double>(loud_lookup[i].val);
             }
         }
     }
@@ -629,7 +637,7 @@ long Alg_reader::parse_key(string &field)
 
 long Alg_reader::parse_after_key(int key, string &field, int n)
 {
-    if ((int) field.length() == n) {
+    if (static_cast<int>(field.length()) == n) {
         return key;
     }
     char c = toupper(field[n]);
@@ -652,7 +660,7 @@ long Alg_reader::parse_after_key(int key, string &field, int n)
 
 long Alg_reader::find_int_in(string &field, int n)
 {
-    while ((int) field.length() > n && isdigit(field[n])) {
+    while (static_cast<int>(field.length()) > n && isdigit(field[n])) {
         n = n + 1;
     }
     return n;
@@ -662,7 +670,7 @@ long Alg_reader::find_int_in(string &field, int n)
 bool Alg_reader::parse_attribute(string &field, Alg_parameter_ptr param)
 {
     int i = 1;
-    while (i < (int) field.length()) {
+    while (i < static_cast<int>(field.length())) {
         if (field[i] == ':') {
             string attr = field.substr(1, i - 1);
             char type_char = field[i - 1];
@@ -682,7 +690,7 @@ bool Alg_reader::parse_attribute(string &field, Alg_parameter_ptr param)
 
 bool Alg_reader::parse_val(Alg_parameter_ptr param, string &s, int i)
 {
-    int len = (int) s.length();
+    int len = static_cast<int>(s.length());
     if (i >= len) {
         return false;
     }
@@ -709,7 +717,9 @@ bool Alg_reader::parse_val(Alg_parameter_ptr param, string &s, int i)
         } else if (streql(s.c_str() + i, "false") ||
                    streql(s.c_str() + i, "nil")) {
             param->l = false;
-        } else return false;
+        } else {
+            return false;
+        }
     } else if (isdigit(s[i]) || s[i] == '-' || s[i] == '.') {
         int pos = i;
         bool period = false;
@@ -721,7 +731,7 @@ bool Alg_reader::parse_val(Alg_parameter_ptr param, string &s, int i)
         static_cast<void>(sign); // sign is unused, so silence warning for now
         while (pos < len) {
             if (isdigit(s[pos])) {
-                ;
+                /* no-op */
             } else if (!period && s[pos] == '.') {
                 period = true;
             } else {

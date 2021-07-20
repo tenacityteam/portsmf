@@ -51,12 +51,12 @@ static const char *const escape_chars[] = {"\\n", "\\t", "\\\\", "\\r", "\\\""};
 
 void string_escape(std::string &result, const char *str, const char *quote)
 {
-    int length = (int) strlen(str);
+    int length = static_cast<int>(strlen(str));
     if (quote[0]) {
         result.append(1, quote[0]);
     }
     for (int i = 0; i < length; i++) {
-        if (!isalnum((unsigned char) str[i])) {
+        if (!isalnum(static_cast<unsigned char>(str[i]))) {
             const char *const chars = "\n\t\\\r\"";
             const char *const special = strchr(chars, str[i]);
             if (special) {
