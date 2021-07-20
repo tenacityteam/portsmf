@@ -24,25 +24,29 @@ void parameter_print(std::ostream &file, Alg_parameter_ptr p)
 {
     file << " -" << p->attr_name() << ":";
     switch (p->attr_type()) {
-    case 'a':
+    case 'a': {
         file << "'" << alg_attr_name(p->a) << "'";
         break;
-    case 'i':
+    }
+    case 'i': {
         file << p->i;
         break;
-    case 'l':
+    }
+    case 'l': {
         file << (p->l ? "true" : "false");
         break;
-    case 'r':
+    }
+    case 'r': {
         file << p->r;
         break;
+    }
     case 's': {
         std::string str;
         string_escape(str, p->s, "\"");
         file << str;
         break;
     }
-    }
+    } /* switch (p->attr_type()) */
 }
 
 Alg_event_ptr Alg_seq::write_track_name(std::ostream &file, int n,
@@ -60,7 +64,9 @@ Alg_event_ptr Alg_seq::write_track_name(std::ostream &file, int n,
     // search for name in events with timestamp of 0
     for (int i = 0; i < events.length(); i++) {
         Alg_event_ptr ue = events[i];
-        if (ue->time > 0) break;
+        if (ue->time > 0) {
+            break;
+        }
         if (ue->is_update()) {
             Alg_update_ptr u = (Alg_update_ptr) ue;
             if (u->parameter.attr == attr) {
@@ -78,8 +84,11 @@ Alg_event_ptr Alg_seq::write_track_name(std::ostream &file, int n,
 void Alg_seq::write(std::ostream &file, bool in_secs, double offset)
 {
     int i, j;
-    if (in_secs) convert_to_seconds();
-    else convert_to_beats();
+    if (in_secs) {
+        convert_to_seconds();
+    } else {
+        convert_to_beats();
+    }
     file << "#offset " << offset << std::endl;
     Alg_event_ptr update_to_skip = write_track_name(file, 0, track_list[0]);
     Alg_beats &beats = time_map->beats;
@@ -124,13 +133,17 @@ void Alg_seq::write(std::ostream &file, bool in_secs, double offset)
 
     for (j = 0; j < track_list.length(); j++) {
         Alg_events &notes = track_list[j];
-        if (j != 0) update_to_skip = write_track_name(file, j, notes);
+        if (j != 0) {
+            update_to_skip = write_track_name(file, j, notes);
+        }
         // now write the notes at beat positions
         for (i = 0; i < notes.length(); i++) {
             Alg_event_ptr e = notes[i];
             // if we already wrote this event as a track or sequence name,
             // do not write it again
-            if (e == update_to_skip) continue;
+            if (e == update_to_skip) {
+                continue;
+            }
             double start = e->time;
             if (in_secs) {
                 file << "T" << TIMFMT << start;
@@ -138,8 +151,11 @@ void Alg_seq::write(std::ostream &file, bool in_secs, double offset)
                 file << "TW" << TIMFMT << start / 4;
             }
             // write the channel as Vn or V-
-            if (e->chan == -1) file << " V-";
-            else file << " V" << e->chan;
+            if (e->chan == -1) {
+                file << " V-";
+            } else {
+                file << " V" << e->chan;
+            }
             // write the note or update data
             if (e->is_note()) {
                 Alg_note_ptr n = (Alg_note_ptr) e;
@@ -173,7 +189,9 @@ void Alg_seq::write(std::ostream &file, bool in_secs, double offset)
 bool Alg_seq::write(const char *filename, double offset)
 {
     std::ofstream file(filename);
-    if (file.fail()) return false;
+    if (file.fail()) {
+        return false;
+    }
     write(file, units_are_seconds, offset);
     file.close();
     return true;

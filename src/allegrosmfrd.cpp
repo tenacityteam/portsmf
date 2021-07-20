@@ -134,7 +134,9 @@ void Alg_midifile_reader::Mf_endtrack()
     channel_offset += seq->channel_offset_per_track;
     track = nullptr;
     double now = get_time();
-    if (seq->get_beat_dur() < now) seq->set_beat_dur(now);
+    if (seq->get_beat_dur() < now) {
+        seq->set_beat_dur(now);
+    }
     meta_channel = -1;
     port = 0;
 }
@@ -190,7 +192,7 @@ void Alg_midifile_reader::Mf_header(int format, int /*ntrks*/, int division)
 
 double Alg_midifile_reader::get_time()
 {
-    double beat = ((double) get_currtime()) / divisions;
+    double beat = static_cast<double>(get_currtime()) / divisions;
     return beat;
 }
 
@@ -209,8 +211,8 @@ void Alg_midifile_reader::Mf_on(int chan, int key, int vel)
     note->chan = chan + channel_offset + port * channel_offset_per_port;
     note->dur = 0;
     note->set_identifier(key);
-    note->pitch = (float) key;
-    note->loud = (float) vel;
+    note->pitch = static_cast<float>(key);
+    note->loud = static_cast<float>(vel);
     track->append(note);
     meta_channel = -1;
 }
@@ -249,7 +251,9 @@ void Alg_midifile_reader::update(int chan, int key, Alg_parameter_ptr param)
     update->parameter = *param;
     // prevent the destructor from destroying the string twice!
     // the new Update takes the string from param
-    if (param->attr_type() == 's') param->s = nullptr;
+    if (param->attr_type() == 's') {
+        param->s = nullptr;
+    }
     track->append(update);
 }
 
@@ -393,7 +397,7 @@ void Alg_midifile_reader::Mf_smpte(int hours, int mins, int secs,
 
 void Alg_midifile_reader::Mf_timesig(int i1, int i2, int /*i3*/, int /*i4*/)
 {
-    seq->set_time_sig(double(get_currtime()) / divisions, i1, 1 << i2);
+    seq->set_time_sig(static_cast<double>(get_currtime()) / divisions, i1, 1 << i2);
 }
 
 
@@ -446,14 +450,21 @@ void Alg_midifile_reader::Mf_text(int type, int len, unsigned char *msg)
     Alg_parameter text;
     text.s = heapify2(len, msg);
     const char *attr = "miscs";
-    if (type == 1) attr = "texts";
-    else if (type == 2) attr = "copyrights";
-    else if (type == 3)
+    if (type == 1) {
+        attr = "texts";
+    } else if (type == 2) {
+        attr = "copyrights";
+    } else if (type == 3) {
         attr = (track_number == 0 ? "seqnames" : "tracknames");
-    else if (type == 4) attr = "instruments";
-    else if (type == 5) attr = "lyrics";
-    else if (type == 6) attr = "markers";
-    else if (type == 7) attr = "cues";
+    } else if (type == 4) {
+        attr = "instruments";
+    } else if (type == 5) {
+        attr = "lyrics";
+    } else if (type == 6) {
+        attr = "markers";
+    } else if (type == 7) {
+        attr = "cues";
+    }
     text.set_attr(symbol_table.insert_string(attr));
     update(meta_channel, -1, &text);
 }

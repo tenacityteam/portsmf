@@ -90,7 +90,9 @@ public:
         for (int i = 0; i < len; i++) {
             delete atoms[i];
         }
-        if (atoms) delete [] atoms;
+        if (atoms) {
+            delete[] atoms;
+        }
     }
     // insert/lookup an atttribute
     Alg_attribute insert_attribute(Alg_attribute attr);
@@ -349,8 +351,11 @@ public:
     // events themselves
     virtual ~Alg_events();
     void set_events(Alg_event_ptr *e, long l, long m) {
-        if (events) delete [] events;
-        events = e; len = l; maxlen = m; }
+        if (events) {
+            delete[] events;
+        }
+        events = e; len = l; maxlen = m;
+    }
     // for use by Alg_track and Alg_seq
     void insert(Alg_event_ptr event);
     void append(Alg_event_ptr event);
@@ -463,7 +468,9 @@ public:
         len = 1;
     }
     ~Alg_beats() {
-        if (beats) delete[] beats;
+        if (beats) {
+            delete[] beats;
+        }
     }
     void insert(long i, Alg_beat_ptr beat);
 } *Alg_beats_ptr;
@@ -513,7 +520,10 @@ public:
     // tempo change takes effect before the inserted beats
     void insert_beats(double start, double len);
     void dereference() {
-        if (--refcount <= 0) delete this;
+        --refcount;
+        if (refcount <= 0) {
+            delete this;
+        }
     }
     void reference() {
         refcount++;
@@ -536,7 +546,7 @@ class Serial_buffer {
     }
     virtual ~Serial_buffer() { }
 
-    long get_posn() { return (long) (ptr - buffer); }
+    long get_posn() { return static_cast<long>(ptr - buffer); }
     long get_len() { return len; }
 };
 
@@ -552,7 +562,11 @@ public:
 #pragma warning(disable: 546) // cast to int is OK, we only want low 7 bits
 #pragma warning(disable: 4311) // type cast pointer to long warning
 #endif
-    void get_pad() { while (((long) ptr) & 7) ptr++; }
+    void get_pad() {
+        while (reinterpret_cast<long>(ptr) & 7) {
+            ptr++;
+        }
+    }
 #if defined(_WIN32)
 #pragma warning(default: 4311 546)
 #endif
@@ -560,23 +574,40 @@ public:
     // valid until reading is finished, and it is caller's responsibility
     // to free buf when it is no longer needed.
     void init_for_read(void *buf, long n) {
-        buffer = (char *) buf;
-        ptr = (char *) buf;
+        buffer = static_cast<char *>(buf);
+        ptr = static_cast<char *>(buf);
         len = n;
     }
     char get_char() { return *ptr++; }
     void unget_chars(int n) { ptr -= n; } // undo n get_char() calls
-    long get_int32() { long i = *((long *) ptr); ptr += 4; return i; }
-    float get_float() { float f = *((float *) ptr); ptr += 4; return f; }
-    double get_double() { double d = *((double *) ptr); ptr += sizeof(double);
-                          return d; }
-    const char *get_string() { char *s = ptr; char *fence = buffer + len;
-                         assert(ptr < fence);
-                         while (*ptr++) assert(ptr < fence);
-                         get_pad();
-                         return s; }
+    long get_int32() {
+        long i = *(reinterpret_cast<long *>(ptr));
+        ptr += 4;
+        return i;
+    }
+    float get_float() {
+        float f = *(reinterpret_cast<float *>(ptr));
+        ptr += 4;
+        return f;
+    }
+    double get_double() {
+        double d = *(reinterpret_cast<double *>(ptr));
+        ptr += sizeof(double);
+        return d;
+    }
+    const char *get_string() {
+        char *s = ptr;
+        char *fence = buffer + len;
+        assert(ptr < fence);
+        while (*ptr++) {
+            assert(ptr < fence);
+        }
+        get_pad();
+        return s;
+    }
     void check_input_buffer(long needed) {
-        assert(get_posn() + needed <= len); }
+        assert(get_posn() + needed <= len);
+    }
 } *Serial_read_buffer_ptr;
 
 
@@ -588,13 +619,15 @@ typedef class Serial_write_buffer: public Serial_buffer {
     // add overhead to the exit process, but it will eliminate an incorrect
     // report of memory leakage from automation that doesn't know better. -RBD
     virtual ~Serial_write_buffer() {
-        if (buffer) delete [] buffer;
+        if (buffer) {
+            delete[] buffer;
+        }
     }
     void init_for_write() { ptr = buffer; }
     // store_long writes a long at a given offset
     void store_long(long offset, long value) {
         assert(offset <= get_posn() - 4);
-        long *loc = (long *) (buffer + offset);
+        long *loc = reinterpret_cast<long *>(buffer + offset);
         *loc = value;
     }
     void check_buffer(long needed);
@@ -603,26 +636,44 @@ typedef class Serial_write_buffer: public Serial_buffer {
         assert(ptr < fence);
         // two brackets surpress a g++ warning, because this is an
         // assignment operator inside a test.
-        while ((*ptr++ = *s++)) assert(ptr < fence);
+        while ((*ptr++ = *s++)) {
+            assert(ptr < fence);
+        }
         // 4311 is type cast pointer to long warning
         // 4312 is type cast long to pointer warning
 #if defined(_WIN32)
 #pragma warning(disable: 4311 4312)
 #endif
-        assert((char *)(((long) (ptr + 7)) & ~7) <= fence);
+        assert(reinterpret_cast<char *>(reinterpret_cast<long>(ptr + 7) & ~7) <= fence);
 #if defined(_WIN32)
 #pragma warning(default: 4311 4312)
 #endif
-        pad(); }
-    void set_int32(long v) { *((long *) ptr) = v; ptr += 4; }
-    void set_double(double v) { *((double *) ptr) = v; ptr += 8; }
-    void set_float(float v) { *((float *) ptr) = v; ptr += 4; }
-    void set_char(char v) { *ptr++ = v; }
+        pad();
+    }
+    void set_int32(long v) {
+        *(reinterpret_cast<long *>(ptr)) = v;
+        ptr += 4;
+    }
+    void set_double(double v) {
+        *(reinterpret_cast<double *>(ptr)) = v;
+        ptr += 8;
+    }
+    void set_float(float v) {
+        *(reinterpret_cast<float *>(ptr)) = v;
+        ptr += 4;
+    }
+    void set_char(char v) {
+        *ptr++ = v;
+    }
 #if defined(_WIN32)
 #pragma warning(disable: 546) // cast to int is OK, we only want low 7 bits
 #pragma warning(disable: 4311) // type cast pointer to long warning
 #endif
-    void pad() { while (((long) ptr) & 7) set_char(0); }
+    void pad() {
+        while (reinterpret_cast<long>(ptr) & 7) {
+            set_char(0);
+        }
+    }
 #if defined(_WIN32)
 #pragma warning(default: 4311 546)
 #endif
@@ -867,7 +918,9 @@ public:
         return time_sigs[i];
     }
     ~Alg_time_sigs() {
-        if (time_sigs) delete[] time_sigs;
+        if (time_sigs) {
+            delete[] time_sigs;
+        }
     }
     void show();
     long length() { return len; }
