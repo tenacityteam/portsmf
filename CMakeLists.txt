@@ -1,7 +1,14 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 project(PortSMF VERSION 235.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 11)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang"
+   OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  add_compile_options(-Wall -Wextra -pedantic)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  add_compile_options(/W4)
+endif()
 
 option(BUILD_SHARED_LIBS "Build dynamic library" ON)
 
