@@ -1,4 +1,4 @@
-// strparse.h -- header for String_parse class
+//! \file strparse.h -- header for String_parse class
 
 class String_parse {
 public:
@@ -11,7 +11,7 @@ public:
     void skip_space();
     char peek();
     void get_nonspace_quoted(std::string &field);
-    // get the remaining characters, skipping initial spaces and final return
+    //!< get the remaining characters, skipping initial spaces and final return
     void get_remainder(std::string &field);
 };
 

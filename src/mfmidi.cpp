@@ -1,7 +1,7 @@
-/*
- * Read a Standard MIDI File.  Externally-assigned function pointers are
- * called upon recognizing things in the file.  See midifile(3).
- */
+//! \file
+//! Read a Standard MIDI File.  Externally-assigned function pointers are
+//! called upon recognizing things in the file.  See midifile(3).
+//!
 
 /*****************************************************************************
 *       Change Log

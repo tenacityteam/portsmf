@@ -1,3 +1,5 @@
+//! \file
+
 #include <cassert>
 #include <cstring>
 #include <string>

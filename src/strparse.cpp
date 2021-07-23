@@ -1,3 +1,5 @@
+//! \file
+
 #include <string>
 #include <cstring>
 #include <cctype>

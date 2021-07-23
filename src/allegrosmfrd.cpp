@@ -1,4 +1,5 @@
-// midifile reader
+//! \file
+//! midifile reader
 
 #include <cassert>
 #include <cstring>

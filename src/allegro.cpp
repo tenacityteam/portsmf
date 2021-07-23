@@ -1,10 +1,11 @@
-// Allegro: music representation system, with
-//      extensible in-memory sequence structure
-//      upward compatible with MIDI
-//      implementations in C++ and Serpent
-//      external, text-based representation
-//      compatible with Aura
-//
+//! \file
+//! Allegro: music representation system, with
+//!      extensible in-memory sequence structure
+//!      upward compatible with MIDI
+//!      implementations in C++ and Serpent
+//!      external, text-based representation
+//!      compatible with Aura
+//!
 /* CHANGE LOG:
 04 apr 03 -- fixed bug in add_track that caused infinite loop
 */
