@@ -89,3 +89,8 @@ option(BUILD_TESTING "Include test projects" OFF)
 if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
+
+option(BUILD_DOCS "Build documentation" OFF)
+if(BUILD_DOCS)
+  add_subdirectory(doc)
+endif()
