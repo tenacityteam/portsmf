@@ -56,7 +56,7 @@ install(FILES
   include/mfmidi.h
   include/strparse.h
   include/trace.h
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/portSMF")
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/portsmf")
 
 # pkgconfig
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/packaging/portSMF.pc.in
