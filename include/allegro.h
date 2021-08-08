@@ -109,7 +109,7 @@ private:
     void expand(); // make more space
 };
 
-extern Alg_atoms symbol_table;
+static Alg_atoms symbol_table;
 
 
 // an attribute/value pair. Since Alg_attribute names imply type,
