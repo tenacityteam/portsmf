@@ -30,7 +30,6 @@
 // 4267 is size_t to long warning
 #pragma warning(disable: 4311 4996 4267)
 #endif
-Alg_atoms symbol_table;
 Serial_read_buffer Alg_track::ser_read_buf; // declare the static variables
 Serial_write_buffer Alg_track::ser_write_buf;
 
