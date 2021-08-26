@@ -92,7 +92,7 @@ if(BUILD_APPS)
   add_subdirectory(apps)
 endif()
 
-option(BUILD_TESTING "Include test projects" OFF)
+include(CTest)
 if(BUILD_TESTING)
   add_subdirectory(test)
 endif()

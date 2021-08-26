@@ -831,6 +831,4 @@ int main()
     //test32();
     printf("*** Test 33 ... DISABLED\n");
     //test33();
-    printf("press enter to exit\n");
-    getchar();
 }
