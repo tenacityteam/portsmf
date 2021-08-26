@@ -34,6 +34,9 @@ jobs:
       run: cmake --build build ${{ matrix.cmake_config }}
       env:
         CMAKE_BUILD_PARALLEL_LEVEL: 2
+    - name: Test
+      if: ${{ runner.os != 'Windows' }}
+      run: cd build && ctest --build-config RelWithDebInfo --output-on-failure && cd ..
     - name: Install
       run: cmake --install . ${{ matrix.cmake_config }}
       working-directory: build
