@@ -22,23 +22,23 @@
 class Midifile_reader {
 public:
     void midifile();
-    int Mf_nomerge; /* 1 => continue'ed system exclusives are */
-				        /* not collapsed. */
-    long Mf_currtime; /* current time in delta-time units */
-    int Mf_skipinit;   /* 1 if initial garbage should be skipped */
+    int Mf_nomerge; //!< 1 => continue'ed system exclusives are not collapsed.
+    long Mf_currtime; //!< current time in delta-time units
+    int Mf_skipinit;   //!< 1 if initial garbage should be skipped
     Midifile_reader();
-	// call finalize() when done or you may leak memory.
+	//! call finalize() when done or you may leak memory.
 	void finalize();  /* clean up before deletion */
-	// Note: rather than finalize, we should have ~Midifile_reader(),
-	// but at least VC++ complains that there is no Mf_free(), even
-	// though Mf_free is declared as virtual and this is an abstract
-	// class. I don't understand this, so finalize() is a workaround. -RBD
+	//! \class Midifile_reader
+	//! Note: rather than finalize, we should have ~Midifile_reader(),
+	//! but at least VC++ complains that there is no Mf_free(), even
+	//! though Mf_free is declared as virtual and this is an abstract
+	//! class. I don't understand this, so finalize() is a workaround. -RBD
 
 protected:
     int midifile_error;
 
-    virtual void *Mf_malloc(size_t size) = 0; /* malloc() */
-    virtual void Mf_free(void *obj, size_t size) = 0; /* free() */
+    virtual void *Mf_malloc(size_t size) = 0; //!< malloc()
+    virtual void Mf_free(void *obj, size_t size) = 0; //!< free()
     /* Methods to be called while processing the MIDI file. */
     virtual void Mf_starttrack() = 0;
     virtual void Mf_endtrack() = 0;
